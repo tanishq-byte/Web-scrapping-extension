@@ -1,7 +1,7 @@
 # test
-'''
+```
 pip freeze -r "requirements.txt"
-'''
+```
 Core (must-have)
 country / region (use ISO codes / standardized region names)
 subnational_region (state / province / county / district)
