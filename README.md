@@ -1,5 +1,8 @@
 # test
 ```
+# for mac/linux
+python3 -m venv venv
+source venv/bin/activate
 pip freeze -r "requirements.txt"
 ```
 Core (must-have)
