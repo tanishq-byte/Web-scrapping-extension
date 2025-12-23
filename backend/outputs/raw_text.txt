@@ -1,0 +1,29 @@
+Crop Market Prices Dashboard
+Crop Market Prices Dashboard
+Real-time crop prices by zone and centre •
+46
+records
+Export Data
+Average Price
+₹0
+Across all centres
+Highest Price
+₹0
+Maximum recorded
+Lowest Price
+₹0
+Minimum recorded
+Total Records
+0
+Entries displayed
+Date
+Zone
+Centre
+Price (₹)
+Showing
+0
+of
+0
+records
+Price above ₹700
+Price below ₹550

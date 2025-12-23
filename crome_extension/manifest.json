@@ -1,0 +1,16 @@
+{
+    "manifest_version": 3,
+    "name": "Farmer Market Insights",
+    "version": "1.0",
+    "description": "AI-based crop market insights for farmers",
+    "action": {
+      "default_popup": "popup.html"
+    },
+    "permissions": [
+      "activeTab"
+    ],
+    "host_permissions": [
+      "http://localhost:8000/*"
+    ]
+  }
+  

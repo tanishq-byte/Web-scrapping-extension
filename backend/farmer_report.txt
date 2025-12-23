@@ -1,0 +1,33 @@
+Dear Farmer,
+
+Here's your latest market report to help you make informed decisions about your crop sales. We've analyzed recent prices across different zones and centres.
+
+**Overall Market Summary:**
+The market shows a clear trend of increasing prices as you move from Zone 1 towards higher-numbered zones. This indicates stronger demand or higher value further down the chain or in specific regions. Understanding these differences can help you maximize your income.
+
+**Zone-Wise Price Insights:**
+  - **Zone 1**: Average price of 564.17. Prices range from 515 (in ROHTAK) to 725 (in SHIMLA).
+  - **Zone 2**: Average price of 585.00. Prices range from 570 (in FARIDABAD) to 600 (in DELHI).
+  - **Zone 3**: Average price of 612.00. Prices range from 595 (in ALWAR) to 630 (in KOTA).
+  - **Zone 4**: Average price of 642.00. Prices range from 625 (in GWALIOR) to 660 (in JABALPUR).
+  - **Zone 5**: Average price of 663.00. Prices range from 645 (in ALIGARH) to 680 (in AGRA).
+  - **Zone 6**: Average price of 689.00. Prices range from 675 (in GAYA) to 700 (in BHAGALPUR).
+  - **Zone 7**: Average price of 715.00. Prices range from 705 (in DURGAPUR) to 725 (in SILIGURI).
+  - **Zone 8**: Average price of 740.00. Prices range from 730 (in NASHIK) to 750 (in MUMBAI).
+  - **Zone 9**: Average price of 755.00. Prices range from 745 (in NALGONDA) to 765 (in KHAMMAM).
+
+**Best Selling Regions:**
+*   **Overall Best Zone:** Zone 9 with an impressive average price of 755.00.
+*   **Highest Price Centre:** The single highest price recorded was 765 in **KHAMMAM (Zone 9)**.
+
+**Worst Selling Regions:**
+*   **Overall Worst Zone:** Zone 1 had the lowest average price of 564.17.
+*   **Lowest Price Centre:** The lowest price recorded was 515 in **ROHTAK (Zone 1)**.
+
+**Actionable Advice for You:**
+1.  **Consider Your Selling Location:** If possible, aim to sell your produce in **Zone 9** or specific high-paying centres like **KHAMMAM** to get the best returns. Prices generally increase from Zone 1 to Zone 9.
+2.  **Monitor Local Prices:** Even within zones, prices can vary. For example, in Zone 1, SHIMLA offered a much higher price (725) compared to ROHTAK (515). Keep an eye on local variations.
+3.  **Avoid Low-Price Areas:** If your farm is near **Zone 1**, explore transportation options to higher-priced zones or negotiate harder in local markets. The lowest recorded price was in **ROHTAK**.
+4.  **Long-term Planning:** The overall trend suggests that regions corresponding to higher zone numbers generally command better prices. This could be due to demand, transportation costs, or local supply. Factor this into your planting and selling strategies.
+
+We hope this report helps you plan better!

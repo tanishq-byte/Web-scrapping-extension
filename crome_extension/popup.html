@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Crop Market Scraper</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      width: 360px;
+      padding: 12px;
+      background: #ffffff;
+    }
+
+    h2 {
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 8px;
+      font-size: 14px;
+      border: 1px solid #444;
+      border-radius: 4px;
+      cursor: pointer;
+      background: #f2f2f2;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      background: #f7f7f7;
+      padding: 10px;
+      border-radius: 4px;
+      max-height: 220px;
+      overflow-y: auto;
+      font-size: 12px;
+      margin-top: 10px;
+    }
+
+    img {
+      width: 100%;
+      margin-top: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2>🌾 Crop Market Scraper</h2>
+
+  <input
+    type="text"
+    id="urlInput"
+    placeholder="Enter website URL"
+    value="http://127.0.0.1:5500/index.html"
+  />
+
+  <button id="scrapeBtn">🔍 Scrape Website</button>
+  <button id="reportBtn" disabled>📊 Generate Report</button>
+  <button id="downloadBtn" disabled>⬇️ Download Report</button>
+
+  <pre id="output">Waiting for action...</pre>
+
+  <!-- Graph Image -->
+  <img
+    id="graphImg"
+    style="display:none"
+    alt="Price Trend Graph"
+  />
+
+  <script src="popup.js"></script>
+
+</body>
+</html>

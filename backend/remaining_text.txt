@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   Crop Market Prices Dashboard
+  </title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <style>
+   * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            color: #334155;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, #059669 0%, #0d9488 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 25px rgba(5, 150, 105, 0.2);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header-title {
+            font-size: 1.875rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            margin-top: 4px;
+            font-size: 0.95rem;
+        }
+
+        .export-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        .export-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Stats Cards */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card:nth-child(1) {
+            border-left: 4px solid #3b82f6;
+        }
+
+        .stat-card:nth-child(2) {
+            border-left: 4px solid #10b981;
+        }
+
+        .stat-card:nth-child(3) {
+            border-left: 4px solid #f59e0b;
+        }
+
+        .stat-card:nth-child(4) {
+            border-left: 4px solid #8b5cf6;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #64748b;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .stat-value.avg { color: #3b82f6; }
+        .stat-value.max { color: #10b981; }
+        .stat-value.min { color: #f59e0b; }
+        .stat-value.count { color: #8b5cf6; }
+
+        .stat-note {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+
+        /* Controls */
+        .controls-container {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.875rem 1rem 0.875rem 3rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #059669;
+            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+        }
+
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .filter-btn {
+            padding: 0.625rem 1.25rem;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            background: white;
+            color: #64748b;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-btn:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+        }
+
+        .filter-btn.active {
+            background: #059669;
+            color: white;
+            border-color: #059669;
+        }
+
+        /* Table Container */
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        th {
+            padding: 1.25rem 1.5rem;
+            text-align: left;
+            font-weight: 600;
+            color: #475569;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        th:hover {
+            background: #f1f5f9;
+        }
+
+        .sort-icon {
+            margin-left: 5px;
+            font-size: 0.8rem;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #f1f5f9;
+            transition: background-color 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background-color: #f8fafc;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        tbody tr:nth-child(even):hover {
+            background-color: #f1f5f9;
+        }
+
+        td {
+            padding: 1rem 1.5rem;
+            color: #334155;
+        }
+
+        .zone-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .zone-1 { background: #dbeafe; color: #1e40af; }
+        .zone-2 { background: #d1fae5; color: #065f46; }
+        .zone-3 { background: #fef3c7; color: #92400e; }
+        .zone-4 { background: #f3e8ff; color: #5b21b6; }
+        .zone-5 { background: #fce7f3; color: #9d174d; }
+        .zone-6 { background: #e0e7ff; color: #3730a3; }
+        .zone-7 { background: #cffafe; color: #155e75; }
+        .zone-8 { background: #ecfccb; color: #3f6212; }
+        .zone-9 { background: #f5d0fe; color: #86198f; }
+
+        .price-cell {
+            font-weight: 700;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .price-high {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .price-low {
+            background: linear-gradient(135deg, #10b981, #059669);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .price-normal {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .price-badge {
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+            margin-left: 8px;
+            font-weight: 600;
+        }
+
+        .high-badge { background: #fee2e2; color: #991b1b; }
+        .low-badge { background: #d1fae5; color: #065f46; }
+
+        .date-cell {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .date-formatted {
+            font-weight: 500;
+        }
+
+        .date-original {
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+
+        /* Footer */
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+
+        .legend {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .legend-dot.high { background: #fca5a5; }
+        .legend-dot.low { background: #86efac; }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: #94a3b8;
+            font-style: italic;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            th, td {
+                padding: 0.875rem 1rem;
+            }
+            
+            .footer {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+  </style>
+ </head>
+ <body>
+  <div class="container">
+   <!-- Header -->
+   <div class="header">
+    <div class="header-content">
+     <div>
+      <h1 class="header-title">
+       <i class="fas fa-chart-line">
+       </i>
+       Crop Market Prices Dashboard
+      </h1>
+      <p class="header-subtitle">
+       Real-time crop prices by zone and centre •
+       <span id="record-count">
+        46
+       </span>
+       records
+      </p>
+     </div>
+     <button class="export-btn" id="exportBtn">
+      <i class="fas fa-download">
+      </i>
+      Export Data
+     </button>
+    </div>
+   </div>
+   <!-- Stats Cards -->
+   <div class="stats-container">
+    <div class="stat-card">
+     <div class="stat-label">
+      Average Price
+     </div>
+     <div class="stat-value avg" id="avg-price">
+      ₹0
+     </div>
+     <div class="stat-note">
+      Across all centres
+     </div>
+    </div>
+    <div class="stat-card">
+     <div class="stat-label">
+      Highest Price
+     </div>
+     <div class="stat-value max" id="max-price">
+      ₹0
+     </div>
+     <div class="stat-note">
+      Maximum recorded
+     </div>
+    </div>
+    <div class="stat-card">
+     <div class="stat-label">
+      Lowest Price
+     </div>
+     <div class="stat-value min" id="min-price">
+      ₹0
+     </div>
+     <div class="stat-note">
+      Minimum recorded
+     </div>
+    </div>
+    <div class="stat-card">
+     <div class="stat-label">
+      Total Records
+     </div>
+     <div class="stat-value count" id="total-count">
+      0
+     </div>
+     <div class="stat-note">
+      Entries displayed
+     </div>
+    </div>
+   </div>
+   <!-- Controls -->
+   <div class="controls-container">
+    <div class="search-box">
+     <i class="fas fa-search search-icon">
+     </i>
+     <input class="search-input" id="searchInput" placeholder="Search by centre or zone..." type="text"/>
+    </div>
+    <div class="filter-buttons" id="filterButtons">
+     <!-- Filter buttons will be generated by JavaScript -->
+    </div>
+   </div>
+   <!-- Table -->
+   <div class="table-container">
+    <div class="table-wrapper">
+     <table id="priceTable">
+      <thead>
+       <tr>
+        <th data-sort="date">
+         Date
+         <span class="sort-icon" id="sortDateIcon">
+         </span>
+        </th>
+        <th>
+         Zone
+        </th>
+        <th data-sort="centre">
+         Centre
+         <span class="sort-icon" id="sortCentreIcon">
+         </span>
+        </th>
+        <th data-sort="price">
+         Price (₹)
+         <span class="sort-icon" id="sortPriceIcon">
+         </span>
+        </th>
+       </tr>
+      </thead>
+      <tbody id="tableBody">
+       <!-- Table rows will be generated by JavaScript -->
+      </tbody>
+     </table>
+    </div>
+   </div>
+   <!-- Footer -->
+   <div class="footer">
+    <p>
+     Showing
+     <span id="showing-count">
+      0
+     </span>
+     of
+     <span id="total-records">
+      0
+     </span>
+     records
+    </p>
+    <div class="legend">
+     <div class="legend-item">
+      <div class="legend-dot high">
+      </div>
+      <span>
+       Price above ₹700
+      </span>
+     </div>
+     <div class="legend-item">
+      <div class="legend-dot low">
+      </div>
+      <span>
+       Price below ₹550
+      </span>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script>
+   // API Response Data
+        
+
+        // Application State
+        let currentData = [];
+        let sortConfig = { key: 'price', direction: 'desc' };
+        let searchTerm = '';
+        let selectedZone = 'All';
+
+        // DOM Elements
+        const tableBody = document.getElementById('tableBody');
+        const searchInput = document.getElementById('searchInput');
+        const filterButtons = document.getElementById('filterButtons');
+        const exportBtn = document.getElementById('exportBtn');
+        const sortDateIcon = document.getElementById('sortDateIcon');
+        const sortCentreIcon = document.getElementById('sortCentreIcon');
+        const sortPriceIcon = document.getElementById('sortPriceIcon');
+        const recordCount = document.getElementById('record-count');
+        const showingCount = document.getElementById('showing-count');
+        const totalRecords = document.getElementById('total-records');
+        const avgPrice = document.getElementById('avg-price');
+        const maxPrice = document.getElementById('max-price');
+        const minPrice = document.getElementById('min-price');
+        const totalCount = document.getElementById('total-count');
+
+        // Initialize
+        function init() {
+            // Process initial data
+            currentData = processData(apiResponse.data);
+            
+            // Initialize filter buttons
+            initFilterButtons();
+            
+            // Render table
+            renderTable();
+            
+            // Update statistics
+            updateStatistics();
+            
+            // Set up event listeners
+            setupEventListeners();
+        }
+
+        // Process raw data
+        function processData(rawData) {
+            return rawData.map(row => {
+                const [date, zone, centre, price] = row;
+                const priceNum = parseInt(price);
+                
+                // Format date
+                const [day, month, year] = date.split('-');
+                const formattedDate = `${day}/${month}/${year}`;
+                
+                return {
+                    date,
+                    zone,
+                    centre,
+                    price: priceNum,
+                    formattedDate
+                };
+            });
+        }
+
+        // Initialize filter buttons
+        function initFilterButtons() {
+            const zones = ['All', ...new Set(apiResponse.data.map(row => row[1]))];
+            
+            filterButtons.innerHTML = zones.map(zone => {
+                const isActive = zone === 'All';
+                return `
+                    <button class="filter-btn ${isActive ? 'active' : ''}" data-zone="${zone}">
+                        ${zone === 'All' ? '<i class="fas fa-filter"></i> All Zones' : `Zone ${zone}`}
+                    </button>
+                `;
+            }).join('');
+        }
+
+        // Get filtered and sorted data
+        function getProcessedData() {
+            let result = [...currentData];
+            
+            // Apply search filter
+            if (searchTerm) {
+                const term = searchTerm.toLowerCase();
+                result = result.filter(item =>
+                    item.centre.toLowerCase().includes(term) ||
+                    item.zone.toString().includes(term)
+                );
+            }
+            
+            // Apply zone filter
+            if (selectedZone !== 'All') {
+                result = result.filter(item => item.zone === selectedZone);
+            }
+            
+            // Apply sorting
+            result.sort((a, b) => {
+                if (sortConfig.key === 'price') {
+                    return sortConfig.direction === 'asc' 
+                        ? a.price - b.price 
+                        : b.price - a.price;
+                } else if (sortConfig.key === 'centre') {
+                    return sortConfig.direction === 'asc'
+                        ? a.centre.localeCompare(b.centre)
+                        : b.centre.localeCompare(a.centre);
+                } else if (sortConfig.key === 'date') {
+                    return sortConfig.direction === 'asc'
+                        ? a.date.localeCompare(b.date)
+                        : b.date.localeCompare(a.date);
+                }
+                return 0;
+            });
+            
+            return result;
+        }
+
+        // Render table
+        function renderTable() {
+            const data = getProcessedData();
+            
+            if (data.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="no-results">
+                            <i class="fas fa-search fa-lg" style="margin-bottom: 10px;"></i><br>
+                            No matching records found
+                        </td>
+                    </tr>
+                `;
+            } else {
+                tableBody.innerHTML = data.map(item => {
+                    const priceClass = item.price > 700 ? 'price-high' : 
+                                      item.price < 550 ? 'price-low' : 'price-normal';
+                    
+                    return `
+                        <tr>
+                            <td>
+                                <div class="date-cell">
+                                    <span class="date-formatted">${item.formattedDate}</span>
+                                    <span class="date-original">${item.date}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="zone-badge zone-${item.zone}">
+                                    Zone ${item.zone}
+                                </span>
+                            </td>
+                            <td>${item.centre}</td>
+                            <td>
+                                <div class="price-cell">
+                                    <span class="${priceClass}">₹${item.price}</span>
+                                    ${item.price > 700 ? '<span class="price-badge high-badge">High</span>' : 
+                                      item.price < 550 ? '<span class="price-badge low-badge">Low</span>' : ''}
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+            
+            // Update counts
+            showingCount.textContent = data.length;
+            totalRecords.textContent = currentData.length;
+            recordCount.textContent = currentData.length;
+        }
+
+        // Update statistics
+        function updateStatistics() {
+            const data = getProcessedData();
+            
+            if (data.length > 0) {
+                const prices = data.map(d => d.price);
+                const avg = Math.round(prices.reduce((a, b) => a + b, 0) / prices.length);
+                const max = Math.max(...prices);
+                const min = Math.min(...prices);
+                
+                avgPrice.textContent = `₹${avg}`;
+                maxPrice.textContent = `₹${max}`;
+                minPrice.textContent = `₹${min}`;
+                totalCount.textContent = data.length;
+            } else {
+                avgPrice.textContent = '₹0';
+                maxPrice.textContent = '₹0';
+                minPrice.textContent = '₹0';
+                totalCount.textContent = '0';
+            }
+        }
+
+        // Update sort icons
+        function updateSortIcons() {
+            // Reset all icons
+            sortDateIcon.innerHTML = '';
+            sortCentreIcon.innerHTML = '';
+            sortPriceIcon.innerHTML = '';
+            
+            // Set active sort icon
+            const icon = sortConfig.direction === 'asc' ? '↑' : '↓';
+            
+            if (sortConfig.key === 'date') {
+                sortDateIcon.innerHTML = icon;
+            } else if (sortConfig.key === 'centre') {
+                sortCentreIcon.innerHTML = icon;
+            } else if (sortConfig.key === 'price') {
+                sortPriceIcon.innerHTML = icon;
+            }
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Search input
+            searchInput.addEventListener('input', (e) => {
+                searchTerm = e.target.value;
+                renderTable();
+                updateStatistics();
+            });
+            
+            // Filter buttons
+            filterButtons.addEventListener('click', (e) => {
+                if (e.target.classList.contains('filter-btn')) {
+                    const zone = e.target.dataset.zone;
+                    selectedZone = zone;
+                    
+                    // Update active button
+                    document.querySelectorAll('.filter-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    e.target.classList.add('active');
+                    
+                    renderTable();
+                    updateStatistics();
+                }
+            });
+            
+            // Sort headers
+            document.querySelectorAll('th[data-sort]').forEach(th => {
+                th.addEventListener('click', () => {
+                    const key = th.dataset.sort;
+                    
+                    if (sortConfig.key === key) {
+                        // Toggle direction if same key
+                        sortConfig.direction = sortConfig.direction === 'asc' ? 'desc' : 'asc';
+                    } else {
+                        // Set new key with default direction
+                        sortConfig.key = key;
+                        sortConfig.direction = 'desc';
+                    }
+                    
+                    updateSortIcons();
+                    renderTable();
+                });
+            });
+            
+            // Export button
+            exportBtn.addEventListener('click', () => {
+                const data = getProcessedData();
+                const csvContent = [
+                    ['Date', 'Zone', 'Centre', 'Price'].join(','),
+                    ...data.map(item => [item.date, item.zone, item.centre, item.price].join(','))
+                ].join('\n');
+                
+                const blob = new Blob([csvContent], { type: 'text/csv' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'crop-prices.csv';
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                // Show feedback
+                const originalText = exportBtn.innerHTML;
+                exportBtn.innerHTML = '<i class="fas fa-check"></i> Exported!';
+                setTimeout(() => {
+                    exportBtn.innerHTML = originalText;
+                }, 2000);
+            });
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', init);
+  </script>
+  <!-- Code injected by live-server -->
+  <script>
+   // <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+  </script>
+ </body>
+</html>
