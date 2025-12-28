@@ -15,4 +15,3 @@ js2py==0.74
 # Data analysis and visualization
 pandas==2.2.2
 matplotlib==3.9.0
-AIzaSyBOzwqcCQRmuJXIkt-7m_lx4XHwZf9ywSQ
